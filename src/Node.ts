@@ -1,16 +1,13 @@
  class TileNode 
 	{
-		  x:Number;
-		  y:Number;
-		  f:Number;
-		  g:Number;
-		  h:Number;
+		  x:number;
+		  y:number;
+		  f:number;
+		  g:number;
+		  h:number;
 		
-		  walkable: Boolean;
-          
-		  parent:Node;
-
-		  costMultiplier:Number = 1.0;
+		  walkable: Boolean;        
+		  parent:TileNode;
 		
 
 		 // bitmap: egret.Bitmap = null;
@@ -19,9 +16,7 @@
 		{	
 			this.x = x;
 			this.y = y;
-			this.g = 0;
-			this.f = 0;
-			this.h = 0;
+	        this.walkable = true;
 		}
 		
         }
