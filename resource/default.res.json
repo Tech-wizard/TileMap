@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,egret_icon_png,description_json,move_json,idle_json,walk_9_png,walk_8_png,walk_7_png,walk_6_png,walk_5_png,walk_4_png,walk_3_png,walk_2_png,walk_1_png,idle_1_png,idle_2_png,idle_3_png,idle_4_png,idle_5_png,idle_6_png,idle_7_png,idle_8_png,idle_9_png,idle_10_png,idle_11_png,idle_12_png,walk_11_png,walk_12_png,walk_10_png",
+			"keys": "bg_jpg,egret_icon_png,description_json,move_json,idle_json,walk_9_png,walk_8_png,walk_7_png,walk_6_png,walk_5_png,walk_4_png,walk_3_png,walk_2_png,walk_1_png,idle_1_png,idle_2_png,idle_3_png,idle_4_png,idle_5_png,idle_6_png,idle_7_png,idle_8_png,idle_9_png,idle_10_png,idle_11_png,idle_12_png,walk_11_png,walk_12_png,walk_10_png,dimian_jpg,zhangai_jpg",
 			"name": "preload"
 		}
 	],
@@ -150,6 +150,16 @@
 			"name": "walk_10_png",
 			"type": "image",
 			"url": "assets/walk_10.png"
+		},
+		{
+			"name": "dimian_jpg",
+			"type": "image",
+			"url": "assets/dimian.jpg"
+		},
+		{
+			"name": "zhangai_jpg",
+			"type": "image",
+			"url": "assets/zhangai.jpg"
 		}
 	]
 }

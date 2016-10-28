@@ -1,8 +1,8 @@
 class AStar {
 
-		  _openList:TileNode[][] = [];//Array<TileNode>//
+		  _openList: TileNode[] = [];//Array<TileNode>//
 
-		  _closedList:TileNode[][]= [];  //已考察表
+		  _closedList: TileNode[] = [];  //已考察表
 
 		  _grid: Grid;
 
@@ -12,17 +12,21 @@ class AStar {
 
 		  _path: TileNode[][] = [];
 
-	_heuristic: Function =this.diagonal;
+	_heuristic: Function = this.diagonal;
 		  _straightCost: number = 1.0;
 		  _diagCost: number = Math.SQRT2;
-
 
 
 	public findPath(grid: Grid): Boolean {
 		this._grid = grid;
 
-		//this._openList = new Array();
-		//this._closedList = new Array();
+		// for (var i = 0; i < this._grid._numCols; i++) {
+		//             this. _openList[i] = new Array();
+		// 			this._closedList[i] = new Array();
+
+		//         }
+		this._openList = new Array();
+		this._closedList = new Array();
 
 		this._startNode = this._grid._starNode;
 		this._endNode = this._grid._endNode;
@@ -36,7 +40,7 @@ class AStar {
 
 	public search(): Boolean {
 
-		var currentNode: TileNode= this._startNode;
+		var currentNode: TileNode = this._startNode;
 
 		while (currentNode != this._endNode) {
 			//_openList = [];  //当前待考察列表
@@ -87,11 +91,20 @@ class AStar {
 			this._closedList.push(currentNode);  //已考察列表
 
 			if (this._openList.length == 0) {
-			//	trace("no path found!");
+				//	trace("no path found!");
 				return false;
 			}
 
-			this._openList.sortOn("f", Array.NUMERIC);
+			//this._openList.sortOn("f", Array.NUMERIC);
+			this._openList.sort(function (a, b) {
+				if (a > b) {
+					return 1;
+				} else if (a < b) {
+					return -1
+				} else {
+					return 0;
+				}
+			})
 			currentNode = this._openList.shift();
 
 			//trace("find node: " + currentNode.x + " " + currentNode.y + " f:" + currentNode.f)
@@ -107,17 +120,17 @@ class AStar {
 
 		if (!this._grid._nodes[currentNode.x][node.y].walkable) return false;
 
-		if (!this._grid._nodes[node.x][ currentNode.y].walkable) return false;
+		if (!this._grid._nodes[node.x][currentNode.y].walkable) return false;
 
 		return true;
 	}
 
 		  isOpen(node: TileNode): Boolean {
-for(var i:number=0;i<this._openList.length;i++){
-	if(this._openList[i]==node){
-		return true;
-	}
-}
+		for (var i: number = 0; i < this._openList.length; i++) {
+			if (this._openList[i] == node) {
+				return true;
+			}
+		}
 		//return this._openList.indexOf(node) > 0 ? true : false;
 	}
 
@@ -125,16 +138,16 @@ for(var i:number=0;i<this._openList.length;i++){
 		return this._closedList.indexOf(node) > 0 ? true : false;
 	}
 
-		  buildPath(): void {
-	
+    buildPath(): void {
+
 		this._path = new Array();
 
 		var node: TileNode = this._endNode;
-		this._path.push(node);
+		this._path.push(new Array(node));
 
 		while (node != this._startNode) {
 			node = node.parent;
-			this._path.unshift(node);
+			this._path.unshift(new Array(node));
 		}
 	}
 
@@ -142,7 +155,7 @@ for(var i:number=0;i<this._openList.length;i++){
 		return Math.abs(this._endNode.x - node.x) * this._straightCost + Math.abs(_endNode.y - node.y) * _straightCost;
 	}
 
-		  euclidian(node:TileNode): number {
+		  euclidian(node: TileNode): number {
 		var dx: number = this._endNode.x - node.x;
 		var dy: number = this._endNode.y - node.y;
 
@@ -160,7 +173,7 @@ for(var i:number=0;i<this._openList.length;i++){
 		return this._diagCost * diag + this._straightCost * (straight - 2 * diag);
 	}
 
-public visited():TileNode[][]{
-	return this._closedList.concat(this._openList);
-}
+	public visited(): TileNode[] {
+		return this._closedList.concat(this._openList);
+	}
 }
