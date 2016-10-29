@@ -152,7 +152,7 @@ class AStar {
 	}
 
 		  manhattan(node: TileNode): number {
-		return Math.abs(this._endNode.x - node.x) * this._straightCost + Math.abs(_endNode.y - node.y) * _straightCost;
+		return Math.abs(this._endNode.x - node.x) * this._straightCost + Math.abs(this._endNode.y - node.y) * this._straightCost;
 	}
 
 		  euclidian(node: TileNode): number {

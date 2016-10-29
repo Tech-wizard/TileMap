@@ -297,41 +297,25 @@ class Main extends egret.DisplayObjectContainer {
         topMask.y = 33;
         this.addChild(topMask);
 
-        this._txInfo = new egret.TextField;
-        this._txInfo.size = 24;
-        this._txInfo.textColor = 0x000000;
-        this._txInfo.lineSpacing = 10;
-        this._txInfo.multiline = true;
-        this._txInfo.text = "判断状态";
-        this._txInfo.x = 30;
-        this._txInfo.y = 100;
-        this.addChild(this._txInfo);
+        // this._txInfo = new egret.TextField;
+        // this._txInfo.size = 24;
+        // this._txInfo.textColor = 0x000000;
+        // this._txInfo.lineSpacing = 10;
+        // this._txInfo.multiline = true;
+        // this._txInfo.text = "判断状态";
+        // this._txInfo.x = 30;
+        // this._txInfo.y = 100;
+        // this.addChild(this._txInfo);
 
-  
-
-
-        //    var body = new egret.Bitmap;
-        //        body.texture = RES.getRes("idle_1_png");
-        //         this.addChild(body);
-
-        //           var list = ["idle_1_png", "idle_2_png", "idle_3_png", "idle_4_png", "idle_5_png", "idle_6_png", "idle_7_png", "idle_8_png", "idle_9_png", "idle_10_png", "idle_11_png", "idle_12_png"];
-        //         var count = -1;
-        //         egret.Ticker.getInstance().register(() => {
-        //             count=count + 0.2;
-        //             if (count >= list.length) {
-        //                 count = 0;
-        //             }
-
-        //             body.texture = RES.getRes(list[Math.floor(count)]);
-
-        //         }, this);
-
+       
+       var map:TileMap = new TileMap();
+       this.addChild(map);
         var player: Player = new Player(this);
         player.idle();
 
         this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, (evt: egret.TouchEvent) => {
 
-            this._txInfo.text += "walk\n";
+          //  this._txInfo.text += "walk\n";
             player.move(evt.stageX, evt.stageY);
 
         }, this);
@@ -389,55 +373,4 @@ class Main extends egret.DisplayObjectContainer {
 
 }
 
-
-
-// class PlayAnimation {
-
-
-//     public startWalk(_main: Main, walk: egret.Bitmap, targetX: number, targetY: number) {
-
-
-
-//         var list = ["walk_1_png", "walk_2_png", "walk_3_png", "walk_4_png", "walk_5_png", "walk_6_png", "walk_7_png", "walk_8_png", "walk_9_png", "walk_10_png", "walk_11_png", "walk_12_png"];
-//         var count = -1;
-//         var change: Function = function () {
-//             count++;
-//             if (count >= list.length) {
-//                 count = 0;
-//             }
-
-//             walk.texture = RES.getRes(list[count]);
-//             egret.Tween.get(walk).to({ x: targetX, y: targetY }, 300, egret.Ease.sineIn);
-
-//             _main.addChild(walk);
-//             var tw = egret.Tween.get(walk);
-//             tw.wait(200);
-//             tw.call(change, self);
-//         };
-
-//         change();
-
-//     }
-
-//     public startidle(_main: Main, idle: egret.Bitmap) {
-
-//         var list = ["idle_1_png", "idle_2_png", "idle_3_png", "idle_4_png", "idle_5_png", "idle_6_png", "idle_7_png", "idle_8_png", "idle_9_png", "idle_10_png", "idle_11_png", "idle_12_png"];
-//         var count = -1;
-//         var change: Function = function () {
-//             count++;
-//             if (count >= list.length) {
-//                 count = 0;
-//             }
-
-//             idle.texture = RES.getRes(list[count]);
-//             _main.addChild(idle);
-//             var tw = egret.Tween.get(idle)
-//             tw.wait(200);
-//             tw.call(change, self);
-//         };
-
-//         change();
-
-//     }
-// }
 
