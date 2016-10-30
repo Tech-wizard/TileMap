@@ -1,22 +1,40 @@
 var TileMap = (function (_super) {
     __extends(TileMap, _super);
-    function TileMap() {
+    function TileMap(player) {
         _super.call(this);
         this.init();
+        this._player = player;
     }
     var d = __define,c=TileMap,p=c.prototype;
     p.init = function () {
+        var _this = this;
         for (var i = 0; i < config.length; i++) {
             var data = config[i];
             var tile = new Tile(data);
             this.addChild(tile);
         }
+        var moveX;
+        var moveY;
         this.touchEnabled = true;
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
             var localX = e.localX;
             var localY = e.localY;
+            var playerX = Math.floor(_this._player._body.x / TileMap.TILE_SIZE);
+            var playerY = Math.floor(_this._player._body.x / TileMap.TILE_SIZE);
             var gridX = Math.floor(localX / TileMap.TILE_SIZE);
             var gridY = Math.floor(localY / TileMap.TILE_SIZE);
+            var astar = new AStar();
+            var grid = new Grid(12, 12);
+            grid.setStartNode(playerX, playerY);
+            grid.setEndNode(gridX, gridY);
+            var findpath = astar.findPath(grid);
+            if (findpath) {
+                for (var i = 0; i < astar._path.length; i++) {
+                    moveX = astar._path[i].x * TileMap.TILE_SIZE;
+                    moveY = astar._path[i].x * TileMap.TILE_SIZE * 14 / 9;
+                    _this._player.move(moveX, moveY);
+                }
+            }
         }, this);
     };
     TileMap.TILE_SIZE = 64;
@@ -178,9 +196,10 @@ var Tile = (function (_super) {
         bitmap.texture = RES.getRes(data.image);
         bitmap.width = 64;
         bitmap.height = 64 * 14 / 9;
-        this.addChild(bitmap);
+        //this.addChild(bitmap);
         this.x = data.x * TileMap.TILE_SIZE;
         this.y = data.y * TileMap.TILE_SIZE * 14 / 9;
+        this.addChild(bitmap);
     }
     var d = __define,c=Tile,p=c.prototype;
     return Tile;

@@ -37,17 +37,18 @@ class Player extends egret.DisplayObjectContainer {
     _ifwalk: boolean;
 
 
-    constructor(_main: Main) {
+    constructor() {
         super();
-        this._main = _main;
         this._body = new egret.Bitmap;
         this._body.texture = RES.getRes("idle_1_png");
-        this._main.addChild(this._body);
-        this._body.anchorOffsetX = 120;
-        this._body.anchorOffsetY = 120;
-        this._stateMachine = new StateMachine();
-        this._body.x = this._main.stage.stageWidth / 2;
-        this._body.y = this._main.stage.stageHeight / 2;
+        this.addChild(this._body);
+      //  this._body.scaleX=0.5;
+      //  this._body.scaleY=0.5;
+        this._body.anchorOffsetX =96;
+        this._body.anchorOffsetY = 192;
+        this._stateMachine=new StateMachine();
+        this._body.x = 32;
+        this._body.y = 32*14/9;
         this._ifidle = true;
         this._ifwalk = false;
 
@@ -59,7 +60,7 @@ class Player extends egret.DisplayObjectContainer {
         }
         else { this._body.skewY = 0; }
         this._stateMachine.setState(new PlayerMoveState(this));
-        egret.Tween.get(this._body).to({ x: targetX, y: targetY }, 2000).call( function(){this.idle()} ,this);
+        egret.Tween.get(this._body).to({ x: targetX, y: targetY }, 1000).call( function(){this.idle()} ,this);
        // if (this._body.x >= targetX - 5 && this._body.x <= targetX + 5 && this._body.y <= targetY + 5 && this._body.y >= targetY - 5) {
         //    if(this._body.x==targetX&&this._body.y==targetY){
         //     this.idle();
@@ -69,7 +70,7 @@ class Player extends egret.DisplayObjectContainer {
     public idle() {
 
         this._stateMachine.setState(new PlayerIdleState(this));
-       // this.startidle();
+      
     }
 
 
@@ -307,18 +308,20 @@ class Main extends egret.DisplayObjectContainer {
         // this._txInfo.y = 100;
         // this.addChild(this._txInfo);
 
-       
-       var map:TileMap = new TileMap();
+       var player: Player = new Player();
+       var map:TileMap = new TileMap(player);
        this.addChild(map);
-        var player: Player = new Player(this);
+        // var grid =new AStar();
+        // var findpath =grid.findPath(new Grid(12,12));
+        this.addChild(player);
         player.idle();
 
-        this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, (evt: egret.TouchEvent) => {
+        // this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, (evt: egret.TouchEvent) => {
 
-          //  this._txInfo.text += "walk\n";
-            player.move(evt.stageX, evt.stageY);
+        //   //  this._txInfo.text += "walk\n";
+        //     player.move(evt.stageX, evt.stageY);
 
-        }, this);
+        // }, this);
 
 
 

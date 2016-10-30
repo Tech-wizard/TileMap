@@ -1,6 +1,6 @@
 class Grid {
 
-    _starNode: TileNode;
+    _startNode: TileNode;
     _endNode: TileNode;
     _nodes: TileNode[][] = [];
     _numCols: number;
@@ -17,6 +17,9 @@ class Grid {
                 this._nodes[i][j] = new TileNode(i, j);
             }
         }
+    }
+  public setStartNode(x: number, y: number) {
+        this._startNode = this._nodes[x][y];
     }
 
     public setEndNode(x: number, y: number) {

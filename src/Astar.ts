@@ -10,25 +10,20 @@ class AStar {
 		  _endNode: TileNode;
 
 
-		  _path: TileNode[][] = [];
+		  _path: TileNode[] = [];
 
-	_heuristic: Function = this.diagonal;
+	    _heuristic: Function = this.diagonal;
+
 		  _straightCost: number = 1.0;
 		  _diagCost: number = Math.SQRT2;
 
 
 	public findPath(grid: Grid): Boolean {
 		this._grid = grid;
-
-		// for (var i = 0; i < this._grid._numCols; i++) {
-		//             this. _openList[i] = new Array();
-		// 			this._closedList[i] = new Array();
-
-		//         }
 		this._openList = new Array();
 		this._closedList = new Array();
 
-		this._startNode = this._grid._starNode;
+		this._startNode = this._grid._startNode;
 		this._endNode = this._grid._endNode;
 
 		this._startNode.g = 0;
@@ -143,11 +138,11 @@ class AStar {
 		this._path = new Array();
 
 		var node: TileNode = this._endNode;
-		this._path.push(new Array(node));
+		this._path.push(node);
 
 		while (node != this._startNode) {
 			node = node.parent;
-			this._path.unshift(new Array(node));
+			this._path.unshift(node);
 		}
 	}
 

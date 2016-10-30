@@ -2,12 +2,12 @@
 class TileMap extends egret.DisplayObjectContainer {
 
     public static TILE_SIZE = 64;
-    _main:Main;
+    _player:Player;
     _block:egret.Bitmap;
-    constructor() {
+    constructor(player:Player) {
         super();
         this.init();
-      
+        this._player = player;
     }
 
     private init() {
@@ -16,12 +16,33 @@ class TileMap extends egret.DisplayObjectContainer {
             var tile = new Tile(data);
             this.addChild(tile);
         }
+        var moveX:number;
+        var moveY:number
         this.touchEnabled = true;
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, (e: egret.TouchEvent) => {
             var localX = e.localX;
             var localY = e.localY;
+            
+            var playerX = Math.floor(this._player._body.x / TileMap.TILE_SIZE);
+            var playerY = Math.floor(this._player._body.x / TileMap.TILE_SIZE);
+
             var gridX = Math.floor(localX / TileMap.TILE_SIZE);
             var gridY = Math.floor(localY / TileMap.TILE_SIZE);
+          var astar =new AStar();
+          var grid = new Grid(12,12);
+          grid.setStartNode(playerX,playerY);
+          grid.setEndNode(gridX,gridY);   
+          var findpath =astar.findPath(grid); 
+         if(findpath){
+             for(var i=0;i<astar._path.length;i++)
+             {
+                 moveX =astar._path[i].x* TileMap.TILE_SIZE;
+                 moveY =astar._path[i].x* TileMap.TILE_SIZE*14/9;
+                  this._player.move(moveX,moveY);
+             }
+
+         }
+
         }, this)
 
     }
@@ -211,10 +232,10 @@ class Tile extends egret.DisplayObjectContainer {
         bitmap.texture = RES.getRes(data.image);
         bitmap.width = 64;
         bitmap.height = 64*14/9;
-        this.addChild(bitmap);
+        //this.addChild(bitmap);
         this.x = data.x * TileMap.TILE_SIZE;
         this.y = data.y * TileMap.TILE_SIZE*14/9;
-        
+        this.addChild(bitmap);
 
     }
 
