@@ -33,19 +33,20 @@ var Player = (function (_super) {
         this._body = new egret.Bitmap;
         this._body.texture = RES.getRes("idle_1_png");
         this.addChild(this._body);
-        //  this._body.scaleX=0.5;
-        //  this._body.scaleY=0.5;
+        this._body.scaleX = 0.6;
+        this._body.scaleY = 0.6;
         this._body.anchorOffsetX = 96;
         this._body.anchorOffsetY = 192;
         this._stateMachine = new StateMachine();
-        this._body.x = 32;
-        this._body.y = 32 * 14 / 9;
+        this._body.x = 0;
+        this._body.y = 0;
         this._ifidle = true;
         this._ifwalk = false;
     }
     var d = __define,c=Player,p=c.prototype;
     p.move = function (targetX, targetY) {
-        egret.Tween.removeTweens(this._body);
+        var _this = this;
+        //egret.Tween.removeTweens(this._body);
         if (targetX > this._body.x) {
             this._body.skewY = 180;
         }
@@ -53,7 +54,10 @@ var Player = (function (_super) {
             this._body.skewY = 0;
         }
         this._stateMachine.setState(new PlayerMoveState(this));
-        egret.Tween.get(this._body).to({ x: targetX, y: targetY }, 1000).call(function () { this.idle(); }, this);
+        egret.setTimeout(function () {
+            egret.Tween.get(_this._body).to({ x: targetX, y: targetY }, 1000).call(function () { this.idle(); }, _this);
+        }, this, 1200);
+        // egret.Tween.get(this._body).to({ x: targetX, y: targetY }, 1000).call( function(){this.idle()} ,this);
         // if (this._body.x >= targetX - 5 && this._body.x <= targetX + 5 && this._body.y <= targetY + 5 && this._body.y >= targetY - 5) {
         //    if(this._body.x==targetX&&this._body.y==targetY){
         //     this.idle();

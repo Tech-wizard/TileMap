@@ -20,18 +20,21 @@ var TileMap = (function (_super) {
             var localX = e.localX;
             var localY = e.localY;
             var playerX = Math.floor(_this._player._body.x / TileMap.TILE_SIZE);
-            var playerY = Math.floor(_this._player._body.x / TileMap.TILE_SIZE);
+            var playerY = Math.floor(_this._player._body.y / TileMap.TILE_SIZE);
             var gridX = Math.floor(localX / TileMap.TILE_SIZE);
             var gridY = Math.floor(localY / TileMap.TILE_SIZE);
             var astar = new AStar();
-            var grid = new Grid(12, 12);
+            var grid = new Grid(12, 12, config);
             grid.setStartNode(playerX, playerY);
             grid.setEndNode(gridX, gridY);
-            var findpath = astar.findPath(grid);
-            if (findpath) {
+            console.log(grid._nodes);
+            if (astar.findPath(grid)) {
+                astar._path.map(function (tile) {
+                    console.log("x:" + tile.x + ",y:" + tile.y);
+                });
                 for (var i = 0; i < astar._path.length; i++) {
                     moveX = astar._path[i].x * TileMap.TILE_SIZE;
-                    moveY = astar._path[i].x * TileMap.TILE_SIZE * 14 / 9;
+                    moveY = astar._path[i].y * TileMap.TILE_SIZE;
                     _this._player.move(moveX, moveY);
                 }
             }
@@ -195,10 +198,10 @@ var Tile = (function (_super) {
         var bitmap = new egret.Bitmap();
         bitmap.texture = RES.getRes(data.image);
         bitmap.width = 64;
-        bitmap.height = 64 * 14 / 9;
+        bitmap.height = 64;
         //this.addChild(bitmap);
         this.x = data.x * TileMap.TILE_SIZE;
-        this.y = data.y * TileMap.TILE_SIZE * 14 / 9;
+        this.y = data.y * TileMap.TILE_SIZE;
         this.addChild(bitmap);
     }
     var d = __define,c=Tile,p=c.prototype;
