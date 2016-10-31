@@ -30,8 +30,8 @@ class TileMap extends egret.DisplayObjectContainer {
             this.addChild(tile);
         }
 
-        var moveX: number;
-        var moveY: number;
+        var moveX: number[]=[];
+        var moveY: number[]=[];
         this.touchEnabled = true;
 
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, (e: egret.TouchEvent) => {
@@ -51,28 +51,22 @@ class TileMap extends egret.DisplayObjectContainer {
             grid.setEndNode(gridX, gridY);
             //console.log(grid._nodes);
             if (this._astar.findPath(grid)) {
-                // astar._path.map((tile) => {
-                //     console.log(`x:${tile.x},y:${tile.y}`)
-                // });
-                //  while (this._i < this._astar._path.length) {
-                //    this._i++;
-                //  }    
-
+                this._astar._path.map((tile) => {
+                    console.log(`x:${tile.x},y:${tile.y}`)
+                });
+                
+           this._i=1;
                 //this.mapMove(moveX, moveY, this._astar._path);
-                for (this._i = 1; this._i < this._astar._path.length; this._i++) {
+             //   for (this._i = 1; this._i < this._astar._path.length; this._i++) {
                     //console.log(this._astar._path[this._i].x, this._astar._path[this._i].y);
-                    // moveX = this._astar._path[this._i].x * TileMap.TILE_SIZE+TileMap.TILE_SIZE/2;
-                    // moveY = this._astar._path[this._i].y * TileMap.TILE_SIZE+TileMap.TILE_SIZE/2;
+                    moveX[i] = this._astar._path[this._i].x * TileMap.TILE_SIZE+TileMap.TILE_SIZE/2;
+                    moveY[i] = this._astar._path[this._i].y * TileMap.TILE_SIZE+TileMap.TILE_SIZE/2;
                     egret.setTimeout(() => {
-                        moveX = this._astar._path[this._i].x * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
-                        moveY = this._astar._path[this._i].y * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
-                        this._player.move(moveX, moveY);
-                        egret.Tween.get(this._player._body).call(() => {
-                            egret.Tween.get(this._player._body).to({ x: moveX, y: moveY }, 500).wait(200);
-                        }, this);
-                    }, this._i, this._i * 800);
-                }
-                this._player.idle();
+                            this._player.move(moveX[i], moveY[i]);
+                            egret.Tween.get(this._player._body).to({ x: moveX[i], y: moveY[i] }, 600).wait(100).call( function(){this._player.idle()} ,this);;
+                    }, this, this._i, this._i * 1000);
+            //}
+                
             }
         }, this);
 

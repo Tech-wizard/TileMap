@@ -16,8 +16,8 @@ var TileMap = (function (_super) {
             var tile = new Tile(data);
             this.addChild(tile);
         }
-        var moveX;
-        var moveY;
+        var moveX = [];
+        var moveY = [];
         this.touchEnabled = true;
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
             var localX = e.localX;
@@ -34,29 +34,20 @@ var TileMap = (function (_super) {
             grid.setEndNode(gridX, gridY);
             //console.log(grid._nodes);
             if (_this._astar.findPath(grid)) {
-                // astar._path.map((tile) => {
-                //     console.log(`x:${tile.x},y:${tile.y}`)
-                // });
-                //  while (this._i < this._astar._path.length) {
-                //    this._i++;
-                //  }    
+                _this._astar._path.map(function (tile) {
+                    console.log("x:" + tile.x + ",y:" + tile.y);
+                });
+                _this._i = 1;
                 //this.mapMove(moveX, moveY, this._astar._path);
-                for (_this._i = 1; _this._i < _this._astar._path.length; _this._i++) {
-                    //console.log(this._astar._path[this._i].x, this._astar._path[this._i].y);
-                    // moveX = this._astar._path[this._i].x * TileMap.TILE_SIZE+TileMap.TILE_SIZE/2;
-                    // moveY = this._astar._path[this._i].y * TileMap.TILE_SIZE+TileMap.TILE_SIZE/2;
-                    egret.setTimeout(function () {
-                        var moveX = 0;
-                        var moveY = 0;
-                        moveX = _this._astar._path[_this._i].x * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
-                        moveY = _this._astar._path[_this._i].y * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
-                        _this._player.move(moveX, moveY);
-                        egret.Tween.get(_this._player._body).call(function () {
-                            egret.Tween.get(_this._player._body).to({ x: moveX, y: moveY }, 500).wait(200);
-                        }, _this);
-                    }, _this._i, _this._i * 800);
-                }
-                _this._player.idle();
+                //   for (this._i = 1; this._i < this._astar._path.length; this._i++) {
+                //console.log(this._astar._path[this._i].x, this._astar._path[this._i].y);
+                moveX[i] = _this._astar._path[_this._i].x * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
+                moveY[i] = _this._astar._path[_this._i].y * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
+                egret.setTimeout(function () {
+                    _this._player.move(moveX[i], moveY[i]);
+                    egret.Tween.get(_this._player._body).to({ x: moveX[i], y: moveY[i] }, 600).wait(100).call(function () { this._player.idle(); }, _this);
+                    ;
+                }, _this, _this._i, _this._i * 1000);
             }
         }, this);
         // public mapMove(moveX: number, moveY: number, path: TileNode[]) {
