@@ -1,16 +1,28 @@
 
 class TileMap extends egret.DisplayObjectContainer {
 
-    public static TILE_SIZE = 64;
+    public static TILE_SIZE: number = 64;
+
     _player: Player;
     _block: egret.Bitmap;
+    _astar: AStar;
+    public _i: number;
+
     constructor(player: Player) {
         super();
         this.init();
         this._player = player;
+        this._i = 0;
     }
 
+    // public playerMove() {
+
+
+    // }
+
+
     private init() {
+
 
         for (var i = 0; i < config.length; i++) {
             var data = config[i];
@@ -21,6 +33,7 @@ class TileMap extends egret.DisplayObjectContainer {
         var moveX: number;
         var moveY: number;
         this.touchEnabled = true;
+
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, (e: egret.TouchEvent) => {
             var localX = e.localX;
             var localY = e.localY;
@@ -28,38 +41,68 @@ class TileMap extends egret.DisplayObjectContainer {
             var playerX = Math.floor(this._player._body.x / TileMap.TILE_SIZE);
             var playerY = Math.floor(this._player._body.y / TileMap.TILE_SIZE);
 
+            // var playerX: number = 0;
+            // var playerY: number = 0;
             var gridX = Math.floor(localX / TileMap.TILE_SIZE);
             var gridY = Math.floor(localY / TileMap.TILE_SIZE);
-            var astar = new AStar();
+            this._astar = new AStar();
             var grid = new Grid(12, 12, config);
             grid.setStartNode(playerX, playerY);
             grid.setEndNode(gridX, gridY);
+            //console.log(grid._nodes);
+            if (this._astar.findPath(grid)) {
+                // astar._path.map((tile) => {
+                //     console.log(`x:${tile.x},y:${tile.y}`)
+                // });
+                //  while (this._i < this._astar._path.length) {
+                //    this._i++;
+                //  }    
 
-console.log(grid._nodes);
-
-            if (astar.findPath(grid)) {
-                astar._path.map((tile) => {
-                    console.log(`x:${tile.x},y:${tile.y}`)
-                });
-                for (var i = 0; i < astar._path.length; i++) {
-                    moveX = astar._path[i].x * TileMap.TILE_SIZE;
-                    moveY = astar._path[i].y * TileMap.TILE_SIZE;
-                    this._player.move(moveX, moveY);
-
+                //this.mapMove(moveX, moveY, this._astar._path);
+                for (this._i = 1; this._i < this._astar._path.length; this._i++) {
+                    //console.log(this._astar._path[this._i].x, this._astar._path[this._i].y);
+                    // moveX = this._astar._path[this._i].x * TileMap.TILE_SIZE+TileMap.TILE_SIZE/2;
+                    // moveY = this._astar._path[this._i].y * TileMap.TILE_SIZE+TileMap.TILE_SIZE/2;
+                    egret.setTimeout(() => {
+                        moveX = this._astar._path[this._i].x * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
+                        moveY = this._astar._path[this._i].y * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
+                        this._player.move(moveX, moveY);
+                        egret.Tween.get(this._player._body).call(() => {
+                            egret.Tween.get(this._player._body).to({ x: moveX, y: moveY }, 500).wait(200);
+                        }, this);
+                    }, this._i, this._i * 800);
                 }
-
+                this._player.idle();
             }
+        }, this);
 
-        }, this)
 
+
+
+
+        // public mapMove(moveX: number, moveY: number, path: TileNode[]) {
+        //    // console.log(this._i);
+        //     egret.Tween.get(this._player._body).to({ x: moveX, y: moveY }, 800).wait(200).call(() => {
+        //         for(this._i=0;this._i < path.length;this._i++) {
+        //             console.log(path[this._i].x, path[this._i].y);
+        //             moveX = path[this._i].x * TileMap.TILE_SIZE;
+        //             moveY = path[this._i].y * TileMap.TILE_SIZE;
+        //             //this.mapMove(moveX, moveY, path);
+        //             egret.Tween.get(this._player._body).to({ x: moveX, y: moveY }, 800).wait(300);
+        //         }
+        //     }
+        //     );
+        // }
     }
-
 }
 
 
 
-var config :TileData []= [
-  
+
+
+
+var config: TileData[] = [
+
     { x: 0, y: 0, walkable: true, image: "dimian_jpg" },
     { x: 1, y: 0, walkable: true, image: "dimian_jpg" },
     { x: 2, y: 0, walkable: true, image: "dimian_jpg" },

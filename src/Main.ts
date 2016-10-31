@@ -35,40 +35,59 @@ class Player extends egret.DisplayObjectContainer {
     _body: egret.Bitmap;
     _ifidle: boolean;
     _ifwalk: boolean;
-
+    _i:number=0;
 
     constructor() {
         super();
         this._body = new egret.Bitmap;
         this._body.texture = RES.getRes("idle_1_png");
         this.addChild(this._body);
-        this._body.scaleX=0.6;
-        this._body.scaleY=0.6;
-        this._body.anchorOffsetX =96;
-        this._body.anchorOffsetY = 192;
+        this._body.width=100;
+        this._body.height=100;
+        this._body.anchorOffsetX= this._body.width/2;
+        this._body.anchorOffsetY= this._body.height/2;
         this._stateMachine=new StateMachine();
-        this._body.x = 0;
-        this._body.y = 0;
+        this._body.x = 32;
+        this._body.y = 32;
         this._ifidle = true;
         this._ifwalk = false;
 
     }
     public move(targetX: number, targetY: number) {
-        //egret.Tween.removeTweens(this._body);
+        
         if (targetX > this._body.x) {
             this._body.skewY = 180;
         }
         else { this._body.skewY = 0; }
         this._stateMachine.setState(new PlayerMoveState(this));
-          egret.setTimeout(() => {
-        egret.Tween.get(this._body).to({ x: targetX, y: targetY }, 1000).call( function(){this.idle()} ,this);     
-                    }, this, 1200);
-       // egret.Tween.get(this._body).to({ x: targetX, y: targetY }, 1000).call( function(){this.idle()} ,this);
+        
+          //egret.setTimeout(() => {
+         //egret.Tween.removeTweens(this._body);
+       // egret.Tween.get(this._body).to({ x: targetX, y: targetY }, 1000).wait(3000);     
+                  //  }, this, 1200);
+     //  egret.Tween.get(this._body).to({ x: targetX, y: targetY }, 1000).wait(300).call( function(){this.idle()} ,this);
        // if (this._body.x >= targetX - 5 && this._body.x <= targetX + 5 && this._body.y <= targetY + 5 && this._body.y >= targetY - 5) {
         //    if(this._body.x==targetX&&this._body.y==targetY){
         //     this.idle();
         // }
+
+
+        // console.log(this._i);
+        // egret.Tween.get(this._body).to({ x: targetX, y: targetY }, 800).wait(200).call(() => {
+        //     while (this._i < path.length) {
+        //         this._i++;
+        //         console.log(path[this._i].x, path[this._i].y);
+        //         targetX = path[this._i].x * TileMap.TILE_SIZE;
+        //         targetY = path[this._i].y * TileMap.TILE_SIZE;
+        //         this.move(targetX, targetY, path);
+        //     }
+
+        // }
+        // );
+       
     }
+
+    
 
     public idle() {
 

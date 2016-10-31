@@ -4,8 +4,11 @@ var TileMap = (function (_super) {
         _super.call(this);
         this.init();
         this._player = player;
+        this._i = 0;
     }
     var d = __define,c=TileMap,p=c.prototype;
+    // public playerMove() {
+    // }
     p.init = function () {
         var _this = this;
         for (var i = 0; i < config.length; i++) {
@@ -21,24 +24,54 @@ var TileMap = (function (_super) {
             var localY = e.localY;
             var playerX = Math.floor(_this._player._body.x / TileMap.TILE_SIZE);
             var playerY = Math.floor(_this._player._body.y / TileMap.TILE_SIZE);
+            // var playerX: number = 0;
+            // var playerY: number = 0;
             var gridX = Math.floor(localX / TileMap.TILE_SIZE);
             var gridY = Math.floor(localY / TileMap.TILE_SIZE);
-            var astar = new AStar();
+            _this._astar = new AStar();
             var grid = new Grid(12, 12, config);
             grid.setStartNode(playerX, playerY);
             grid.setEndNode(gridX, gridY);
-            console.log(grid._nodes);
-            if (astar.findPath(grid)) {
-                astar._path.map(function (tile) {
-                    console.log("x:" + tile.x + ",y:" + tile.y);
-                });
-                for (var i = 0; i < astar._path.length; i++) {
-                    moveX = astar._path[i].x * TileMap.TILE_SIZE;
-                    moveY = astar._path[i].y * TileMap.TILE_SIZE;
-                    _this._player.move(moveX, moveY);
+            //console.log(grid._nodes);
+            if (_this._astar.findPath(grid)) {
+                // astar._path.map((tile) => {
+                //     console.log(`x:${tile.x},y:${tile.y}`)
+                // });
+                //  while (this._i < this._astar._path.length) {
+                //    this._i++;
+                //  }    
+                //this.mapMove(moveX, moveY, this._astar._path);
+                for (_this._i = 1; _this._i < _this._astar._path.length; _this._i++) {
+                    //console.log(this._astar._path[this._i].x, this._astar._path[this._i].y);
+                    // moveX = this._astar._path[this._i].x * TileMap.TILE_SIZE+TileMap.TILE_SIZE/2;
+                    // moveY = this._astar._path[this._i].y * TileMap.TILE_SIZE+TileMap.TILE_SIZE/2;
+                    egret.setTimeout(function () {
+                        var moveX = 0;
+                        var moveY = 0;
+                        moveX = _this._astar._path[_this._i].x * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
+                        moveY = _this._astar._path[_this._i].y * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
+                        _this._player.move(moveX, moveY);
+                        egret.Tween.get(_this._player._body).call(function () {
+                            egret.Tween.get(_this._player._body).to({ x: moveX, y: moveY }, 500).wait(200);
+                        }, _this);
+                    }, _this._i, _this._i * 800);
                 }
+                _this._player.idle();
             }
         }, this);
+        // public mapMove(moveX: number, moveY: number, path: TileNode[]) {
+        //    // console.log(this._i);
+        //     egret.Tween.get(this._player._body).to({ x: moveX, y: moveY }, 800).wait(200).call(() => {
+        //         for(this._i=0;this._i < path.length;this._i++) {
+        //             console.log(path[this._i].x, path[this._i].y);
+        //             moveX = path[this._i].x * TileMap.TILE_SIZE;
+        //             moveY = path[this._i].y * TileMap.TILE_SIZE;
+        //             //this.mapMove(moveX, moveY, path);
+        //             egret.Tween.get(this._player._body).to({ x: moveX, y: moveY }, 800).wait(300);
+        //         }
+        //     }
+        //     );
+        // }
     };
     TileMap.TILE_SIZE = 64;
     return TileMap;
