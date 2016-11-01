@@ -2,6 +2,8 @@ var TileMap = (function (_super) {
     __extends(TileMap, _super);
     function TileMap(player) {
         _super.call(this);
+        this.moveX = [];
+        this.moveY = [];
         this.init();
         this._player = player;
         this._i = 0;
@@ -16,8 +18,6 @@ var TileMap = (function (_super) {
             var tile = new Tile(data);
             this.addChild(tile);
         }
-        var moveX = [];
-        var moveY = [];
         this.touchEnabled = true;
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
             var localX = e.localX;
@@ -38,16 +38,16 @@ var TileMap = (function (_super) {
                     console.log("x:" + tile.x + ",y:" + tile.y);
                 });
                 _this._i = 1;
-                //this.mapMove(moveX, moveY, this._astar._path);
-                //   for (this._i = 1; this._i < this._astar._path.length; this._i++) {
-                //console.log(this._astar._path[this._i].x, this._astar._path[this._i].y);
-                moveX[i] = _this._astar._path[_this._i].x * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
-                moveY[i] = _this._astar._path[_this._i].y * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
-                egret.setTimeout(function () {
-                    _this._player.move(moveX[i], moveY[i]);
-                    egret.Tween.get(_this._player._body).to({ x: moveX[i], y: moveY[i] }, 600).wait(100).call(function () { this._player.idle(); }, _this);
-                    ;
-                }, _this, _this._i, _this._i * 1000);
+                _this.moveX[_this._i] = _this._astar._path[_this._i].x * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
+                _this.moveY[_this._i] = _this._astar._path[_this._i].y * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
+                _this._player.move(_this.moveX[_this._i], _this.moveY[_this._i]);
+                egret.Tween.get(_this._player._body).to({ x: _this.moveX[_this._i], y: _this.moveY[_this._i] }, 600).wait(100).call(function () { this._player.idle(); }, _this);
+                var timer = new egret.Timer(1200, _this._astar._path.length + 1);
+                //注册事件侦听器
+                timer.addEventListener(egret.TimerEvent.TIMER, _this.timerFunc, _this);
+                timer.addEventListener(egret.TimerEvent.TIMER_COMPLETE, _this.timerComFunc, _this);
+                //开始计时
+                timer.start();
             }
         }, this);
         // public mapMove(moveX: number, moveY: number, path: TileNode[]) {
@@ -63,6 +63,21 @@ var TileMap = (function (_super) {
         //     }
         //     );
         // }
+    };
+    p.timerFunc = function () {
+        var _this = this;
+        this._i++;
+        this.moveX[this._i] = this._astar._path[this._i].x * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
+        this.moveY[this._i] = this._astar._path[this._i].y * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
+        egret.setTimeout(function () {
+            //egret.Tween.removeTweens(this._player._body);
+            _this._player.move(_this.moveX[_this._i], _this.moveY[_this._i]);
+            egret.Tween.get(_this._player._body).to({ x: _this.moveX[_this._i], y: _this.moveY[_this._i] }, 600).wait(100).call(function () { this._player.idle(); }, _this);
+            ;
+        }, this, 200);
+    };
+    p.timerComFunc = function () {
+        console.log("计时结束");
     };
     TileMap.TILE_SIZE = 64;
     return TileMap;

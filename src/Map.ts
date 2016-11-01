@@ -7,6 +7,9 @@ class TileMap extends egret.DisplayObjectContainer {
     _block: egret.Bitmap;
     _astar: AStar;
     public _i: number;
+    moveX: number[] = [];
+    moveY: number[] = [];
+
 
     constructor(player: Player) {
         super();
@@ -30,8 +33,7 @@ class TileMap extends egret.DisplayObjectContainer {
             this.addChild(tile);
         }
 
-        var moveX: number[]=[];
-        var moveY: number[]=[];
+
         this.touchEnabled = true;
 
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, (e: egret.TouchEvent) => {
@@ -54,19 +56,37 @@ class TileMap extends egret.DisplayObjectContainer {
                 this._astar._path.map((tile) => {
                     console.log(`x:${tile.x},y:${tile.y}`)
                 });
-                
-           this._i=1;
-                //this.mapMove(moveX, moveY, this._astar._path);
-             //   for (this._i = 1; this._i < this._astar._path.length; this._i++) {
-                    //console.log(this._astar._path[this._i].x, this._astar._path[this._i].y);
-                    moveX[i] = this._astar._path[this._i].x * TileMap.TILE_SIZE+TileMap.TILE_SIZE/2;
-                    moveY[i] = this._astar._path[this._i].y * TileMap.TILE_SIZE+TileMap.TILE_SIZE/2;
-                    egret.setTimeout(() => {
-                            this._player.move(moveX[i], moveY[i]);
-                            egret.Tween.get(this._player._body).to({ x: moveX[i], y: moveY[i] }, 600).wait(100).call( function(){this._player.idle()} ,this);;
-                    }, this, this._i, this._i * 1000);
-            //}
-                
+
+                this._i = 1;
+                this.moveX[this._i] = this._astar._path[this._i].x * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
+                this.moveY[this._i] = this._astar._path[this._i].y * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
+                this._player.move(this.moveX[this._i], this.moveY[this._i]);
+                egret.Tween.get(this._player._body).to({ x: this.moveX[this._i], y: this.moveY[this._i] }, 600).wait(100).call(function () { this._player.idle() }, this);
+
+
+                var timer: egret.Timer = new egret.Timer(1200, this._astar._path.length+1);
+                //注册事件侦听器
+                timer.addEventListener(egret.TimerEvent.TIMER, this.timerFunc, this);
+                timer.addEventListener(egret.TimerEvent.TIMER_COMPLETE, this.timerComFunc, this);
+                //开始计时
+                timer.start();
+
+
+
+
+                // for (this._i = 2; this._i < this._astar._path.length; this._i++) {
+                //     //console.log(this._astar._path[this._i].x, this._astar._path[this._i].y);
+                //     this.moveX[this._i] = this._astar._path[this._i].x * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
+                //     this.moveY[this._i] = this._astar._path[this._i].y * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
+                //     egret.setTimeout(() => {
+                //         //egret.Tween.removeTweens(this._player._body);
+                //         this._player.move(this.moveX[this._i],this.moveY[this._i]);
+                //         egret.Tween.get(this._player._body).to({ x: this.moveX[this._i], y: this.moveY[this._i] }, 600).wait(100).call(function () { this._player.idle() }, this);;
+                //     }, this, 1000);
+                // }
+
+
+
             }
         }, this);
 
@@ -87,6 +107,20 @@ class TileMap extends egret.DisplayObjectContainer {
         //     }
         //     );
         // }
+    }
+
+    private timerFunc() {
+        this._i++;
+        this.moveX[this._i] = this._astar._path[this._i].x * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
+        this.moveY[this._i] = this._astar._path[this._i].y * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
+        egret.setTimeout(() => {
+            //egret.Tween.removeTweens(this._player._body);
+            this._player.move(this.moveX[this._i], this.moveY[this._i]);
+            egret.Tween.get(this._player._body).to({ x: this.moveX[this._i], y: this.moveY[this._i] }, 600).wait(100).call(function () { this._player.idle() }, this);;
+        }, this, 200);
+    }
+    private timerComFunc() {
+        console.log("计时结束");
     }
 }
 
