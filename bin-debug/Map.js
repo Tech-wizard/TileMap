@@ -41,8 +41,8 @@ var TileMap = (function (_super) {
                 _this.moveX[_this._i] = _this._astar._path[_this._i].x * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
                 _this.moveY[_this._i] = _this._astar._path[_this._i].y * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
                 _this._player.move(_this.moveX[_this._i], _this.moveY[_this._i]);
-                egret.Tween.get(_this._player._body).to({ x: _this.moveX[_this._i], y: _this.moveY[_this._i] }, 600).wait(100).call(function () { this._player.idle(); }, _this);
-                var timer = new egret.Timer(1200, _this._astar._path.length + 1);
+                egret.Tween.get(_this._player._body).to({ x: _this.moveX[_this._i], y: _this.moveY[_this._i] }, 600).wait(10).call(function () { this._player.idle(); }, _this);
+                var timer = new egret.Timer(1000, _this._astar._path.length - 2);
                 //注册事件侦听器
                 timer.addEventListener(egret.TimerEvent.TIMER, _this.timerFunc, _this);
                 timer.addEventListener(egret.TimerEvent.TIMER_COMPLETE, _this.timerComFunc, _this);
@@ -65,16 +65,14 @@ var TileMap = (function (_super) {
         // }
     };
     p.timerFunc = function () {
-        var _this = this;
         this._i++;
         this.moveX[this._i] = this._astar._path[this._i].x * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
         this.moveY[this._i] = this._astar._path[this._i].y * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
-        egret.setTimeout(function () {
-            //egret.Tween.removeTweens(this._player._body);
-            _this._player.move(_this.moveX[_this._i], _this.moveY[_this._i]);
-            egret.Tween.get(_this._player._body).to({ x: _this.moveX[_this._i], y: _this.moveY[_this._i] }, 600).wait(100).call(function () { this._player.idle(); }, _this);
-            ;
-        }, this, 200);
+        //egret.setTimeout(() => {
+        //egret.Tween.removeTweens(this._player._body);
+        this._player.move(this.moveX[this._i], this.moveY[this._i]);
+        egret.Tween.get(this._player._body).to({ x: this.moveX[this._i], y: this.moveY[this._i] }, 600).wait(10).call(function () { this._player.idle(); }, this);
+        // }, this, 200);
     };
     p.timerComFunc = function () {
         console.log("计时结束");

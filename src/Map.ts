@@ -61,10 +61,10 @@ class TileMap extends egret.DisplayObjectContainer {
                 this.moveX[this._i] = this._astar._path[this._i].x * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
                 this.moveY[this._i] = this._astar._path[this._i].y * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
                 this._player.move(this.moveX[this._i], this.moveY[this._i]);
-                egret.Tween.get(this._player._body).to({ x: this.moveX[this._i], y: this.moveY[this._i] }, 600).wait(100).call(function () { this._player.idle() }, this);
+                egret.Tween.get(this._player._body).to({ x: this.moveX[this._i], y: this.moveY[this._i] }, 600).wait(10).call(function () { this._player.idle() }, this);
 
 
-                var timer: egret.Timer = new egret.Timer(1200, this._astar._path.length+1);
+                var timer: egret.Timer = new egret.Timer(1000, this._astar._path.length-2);
                 //注册事件侦听器
                 timer.addEventListener(egret.TimerEvent.TIMER, this.timerFunc, this);
                 timer.addEventListener(egret.TimerEvent.TIMER_COMPLETE, this.timerComFunc, this);
@@ -113,11 +113,11 @@ class TileMap extends egret.DisplayObjectContainer {
         this._i++;
         this.moveX[this._i] = this._astar._path[this._i].x * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
         this.moveY[this._i] = this._astar._path[this._i].y * TileMap.TILE_SIZE + TileMap.TILE_SIZE / 2;
-        egret.setTimeout(() => {
+        //egret.setTimeout(() => {
             //egret.Tween.removeTweens(this._player._body);
             this._player.move(this.moveX[this._i], this.moveY[this._i]);
-            egret.Tween.get(this._player._body).to({ x: this.moveX[this._i], y: this.moveY[this._i] }, 600).wait(100).call(function () { this._player.idle() }, this);;
-        }, this, 200);
+            egret.Tween.get(this._player._body).to({ x: this.moveX[this._i], y: this.moveY[this._i] }, 600).wait(10).call(function () { this._player.idle() }, this);
+       // }, this, 200);
     }
     private timerComFunc() {
         console.log("计时结束");
